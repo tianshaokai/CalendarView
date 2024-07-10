@@ -37,6 +37,11 @@ public abstract class MonthView extends BaseMonthView {
                 mDelegate.getCalendarPaddingLeft() -
                 mDelegate.getCalendarPaddingRight()) / 7;
         onPreviewHook();
+
+        if (mDelegate.getMonthHeaderHeight() > 0) {
+            onDrawHeader(canvas, mPreDiff, (mItemWidth * mPreDiff) + mDelegate.getCalendarPaddingLeft(), mDelegate.getMonthHeaderHeight());
+        }
+
         int count = mLineCount * 7;
         int d = 0;
         for (int i = 0; i < mLineCount; i++) {
@@ -73,7 +78,7 @@ public abstract class MonthView extends BaseMonthView {
      */
     private void draw(Canvas canvas, Calendar calendar, int i, int j, int d) {
         int x = j * mItemWidth + mDelegate.getCalendarPaddingLeft();
-        int y = i * mItemHeight;
+        int y = i * mItemHeight + mDelegate.getMonthHeaderHeight();
         onLoopStart(x, y);
         boolean isSelected = d == mCurrentItem;
         boolean hasScheme = calendar.hasScheme();
@@ -129,10 +134,11 @@ public abstract class MonthView extends BaseMonthView {
 
         mCurrentItem = mItems.indexOf(calendar);
 
-        if (!calendar.isCurrentMonth() && mMonthViewPager != null) {
-            int cur = mMonthViewPager.getCurrentItem();
-            int position = mCurrentItem < 7 ? cur - 1 : cur + 1;
-            mMonthViewPager.setCurrentItem(position);
+        if (!calendar.isCurrentMonth() && iMonthView != null) {
+            int currentMonthItem = iMonthView.getCurrentMonthItem();
+            int position = mCurrentItem < 7 ? currentMonthItem - 1 : currentMonthItem + 1;
+            iMonthView.setCurrentItem(position, false);
+            iMonthView.notifyItemChanged(position);
         }
 
         if (mDelegate.mInnerListener != null) {
@@ -195,10 +201,10 @@ public abstract class MonthView extends BaseMonthView {
 
         mCurrentItem = mItems.indexOf(calendar);
 
-        if (!calendar.isCurrentMonth() && mMonthViewPager != null) {
-            int cur = mMonthViewPager.getCurrentItem();
-            int position = mCurrentItem < 7 ? cur - 1 : cur + 1;
-            mMonthViewPager.setCurrentItem(position);
+        if (!calendar.isCurrentMonth() && iMonthView != null) {
+            int currentMonthItem = iMonthView.getCurrentMonthItem();
+            int position = mCurrentItem < 7 ? currentMonthItem - 1 : currentMonthItem + 1;
+            iMonthView.setCurrentItem(position, false);
         }
 
         if (mDelegate.mInnerListener != null) {
@@ -224,6 +230,19 @@ public abstract class MonthView extends BaseMonthView {
         invalidate();
         return true;
     }
+
+
+    /**
+     * 绘制每个月头
+     * @param canvas
+     * @param x
+     * @param y
+     * @param height
+     */
+    protected void onDrawHeader(Canvas canvas, int x, int y, int height) {
+
+    }
+
 
     /**
      * 绘制选中的日期

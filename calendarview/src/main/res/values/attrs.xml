@@ -18,6 +18,7 @@
         <attr name="year_view" format="string" /> <!--完全自定义年视图-->
         <attr name="week_bar_height" format="dimension" /> <!--星期栏的高度-->
         <attr name="week_bar_view" format="string" /> <!--如果需要的话使用自定义星期栏-->
+        <attr name="month_header_height" format="dimension" /> <!--月头高度-->
 
         <attr name="scheme_text" format="string" />
         <attr name="day_text_size" format="dimension" />
@@ -36,8 +37,8 @@
         <attr name="current_day_text_color" format="color" />
         <attr name="current_day_lunar_text_color" format="color" />
         <attr name="current_month_text_color" format="color" />
-        <attr name="other_month_text_color" format="color" />
         <attr name="current_month_lunar_text_color" format="color" />
+        <attr name="other_month_text_color" format="color" />
         <attr name="other_month_lunar_text_color" format="color" />
 
 
@@ -65,12 +66,12 @@
         <attr name="year_view_month_padding_bottom" format="dimension" />
 
         <!--日期范围-->
-        <attr name="min_year" format="integer" />
         <attr name="max_year" format="integer" />
-        <attr name="min_year_month" format="integer" />
         <attr name="max_year_month" format="integer" />
-        <attr name="min_year_day" format="integer" />
         <attr name="max_year_day" format="integer" />
+        <attr name="min_year" format="integer" />
+        <attr name="min_year_day" format="integer" />
+        <attr name="min_year_month" format="integer" />
 
 
         <!--月视图是否可滚动-->
@@ -79,6 +80,12 @@
         <attr name="week_view_scrollable" format="boolean" />
         <!--年视图是否可滚动-->
         <attr name="year_view_scrollable" format="boolean" />
+
+        <!--日历方向-->
+        <attr name="calendar_orientation">
+            <enum name="vertical" value="1" />
+            <enum name="horizontal" value="0" />
+        </attr>
 
         <!-- 月份显示模式 -->
         <attr name="month_view_show_mode">

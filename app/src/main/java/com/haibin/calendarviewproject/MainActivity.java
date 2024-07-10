@@ -8,6 +8,7 @@ import androidx.appcompat.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,6 +55,8 @@ public class MainActivity extends BaseActivity implements
     TextView mTextYear;
 
     TextView mTextLunar;
+
+    ImageView imageView;
 
     TextView mTextCurrentDay;
 
@@ -110,6 +113,39 @@ public class MainActivity extends BaseActivity implements
                 mMoreDialog.show();
             }
         });
+
+
+        imageView = findViewById(R.id.iv_orientation);
+        if (mCalendarView.isMonthViewHorizontalScroll()) {
+            imageView.setImageResource(R.mipmap.ic_horizontal);
+        } else {
+            imageView.setImageResource(R.mipmap.ic_vertical);
+        }
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mCalendarView.isMonthViewHorizontalScroll()) {
+                    mCalendarView.switchVerticalScrollMonthView();
+                    imageView.setImageResource(R.mipmap.ic_vertical);
+                    Toast.makeText(MainActivity.this.getApplicationContext(), "垂直列表", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                mCalendarView.switchHorizontalScrollMonthView();
+                Toast.makeText(MainActivity.this.getApplicationContext(), "水平列表", Toast.LENGTH_SHORT).show();
+                imageView.setImageResource(R.mipmap.ic_horizontal);
+            }
+        });
+
+        findViewById(R.id.iv_expand).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!mCalendarView.isMonthViewHorizontalScroll()) {
+                    mCalendarLayout.switchMonthViewToList();
+                }
+            }
+        });
+
+
 
         final DialogInterface.OnClickListener listener =
                 new DialogInterface.OnClickListener() {

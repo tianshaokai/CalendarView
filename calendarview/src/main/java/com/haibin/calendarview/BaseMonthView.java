@@ -24,8 +24,6 @@ import android.content.Context;
  */
 public abstract class BaseMonthView extends BaseView {
 
-    MonthViewPager mMonthViewPager;
-
     /**
      * 当前日历卡年份
      */
@@ -52,6 +50,10 @@ public abstract class BaseMonthView extends BaseView {
      * 下个月偏移的数量
      */
     protected int mNextDiff;
+    protected int mPreDiff;
+    protected int mMonthDayCount;
+
+    IMonthView iMonthView;
 
 
     public BaseMonthView(Context context) {
@@ -69,7 +71,7 @@ public abstract class BaseMonthView extends BaseView {
         mMonth = month;
         initCalendar();
         mHeight = CalendarUtil.getMonthViewHeight(year, month, mItemHeight, mDelegate.getWeekStart(),
-                mDelegate.getMonthViewShowMode());
+                mDelegate.getMonthViewShowMode()) + mDelegate.getMonthHeaderHeight();
 
     }
 
@@ -80,8 +82,8 @@ public abstract class BaseMonthView extends BaseView {
     private void initCalendar() {
 
         mNextDiff = CalendarUtil.getMonthEndDiff(mYear, mMonth, mDelegate.getWeekStart());
-        int preDiff = CalendarUtil.getMonthViewStartDiff(mYear, mMonth, mDelegate.getWeekStart());
-        int monthDayCount = CalendarUtil.getMonthDaysCount(mYear, mMonth);
+        mPreDiff = CalendarUtil.getMonthViewStartDiff(mYear, mMonth, mDelegate.getWeekStart());
+        mMonthDayCount = CalendarUtil.getMonthDaysCount(mYear, mMonth);
 
         mItems = CalendarUtil.initCalendarForMonthView(mYear, mMonth, mDelegate.getCurrentDay(), mDelegate.getWeekStart());
 
@@ -100,7 +102,7 @@ public abstract class BaseMonthView extends BaseView {
         if (mDelegate.getMonthViewShowMode() == CalendarViewDelegate.MODE_ALL_MONTH) {
             mLineCount = 6;
         } else {
-            mLineCount = (preDiff + monthDayCount + mNextDiff) / 7;
+            mLineCount = (mPreDiff + mMonthDayCount + mNextDiff) / 7;
         }
         addSchemesFromMap();
         invalidate();
@@ -112,7 +114,7 @@ public abstract class BaseMonthView extends BaseView {
      * @return return
      */
     protected Calendar getIndex() {
-        if (mItemWidth == 0 || mItemHeight == 0) {
+        if (mItemWidth == 0 || mItemHeight == 0 || mY <= mDelegate.getMonthHeaderHeight()) {
             return null;
         }
         if (mX <= mDelegate.getCalendarPaddingLeft() || mX >= getWidth() - mDelegate.getCalendarPaddingRight()) {
@@ -123,7 +125,7 @@ public abstract class BaseMonthView extends BaseView {
         if (indexX >= 7) {
             indexX = 6;
         }
-        int indexY = (int) mY / mItemHeight;
+        int indexY = (int) (mY - mDelegate.getMonthHeaderHeight()) / mItemHeight;
         int position = indexY * 7 + indexX;// 选择项
         if (position >= 0 && position < mItems.size()) {
             return mItems.get(position);
@@ -182,7 +184,7 @@ public abstract class BaseMonthView extends BaseView {
         mLineCount = CalendarUtil.getMonthViewLineCount(mYear, mMonth,
                 mDelegate.getWeekStart(), mDelegate.getMonthViewShowMode());
         mHeight = CalendarUtil.getMonthViewHeight(mYear, mMonth, mItemHeight, mDelegate.getWeekStart(),
-                mDelegate.getMonthViewShowMode());
+                mDelegate.getMonthViewShowMode()) + mDelegate.getMonthHeaderHeight();
         invalidate();
     }
 
@@ -192,14 +194,14 @@ public abstract class BaseMonthView extends BaseView {
     final void updateWeekStart() {
         initCalendar();
         mHeight = CalendarUtil.getMonthViewHeight(mYear, mMonth, mItemHeight, mDelegate.getWeekStart(),
-                mDelegate.getMonthViewShowMode());
+                mDelegate.getMonthViewShowMode()) + mDelegate.getMonthHeaderHeight();
     }
 
     @Override
     void updateItemHeight() {
         super.updateItemHeight();
         mHeight = CalendarUtil.getMonthViewHeight(mYear, mMonth, mItemHeight, mDelegate.getWeekStart(),
-                mDelegate.getMonthViewShowMode());
+                mDelegate.getMonthViewShowMode()) + mDelegate.getMonthHeaderHeight();
     }
 
 
@@ -235,6 +237,16 @@ public abstract class BaseMonthView extends BaseView {
         }
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
+
+
+    /**
+     * 是否月 前几天
+     * @return
+     */
+    public final boolean isMonthDayTop() {
+        return mCurrentItem >= 0 && mCurrentItem < mMonthDayCount + mPreDiff;
+    }
+
 
     /**
      * 开始绘制前的钩子，这里做一些初始化的操作，每次绘制只调用一次，性能高效

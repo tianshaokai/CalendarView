@@ -91,6 +91,25 @@ final class CalendarViewDelegate {
      */
     private int mMonthViewShowMode;
 
+    /**
+     * 日历方向
+     */
+    private int mCalendarOrientation;
+
+    /**
+     * 月份头部高度
+     */
+    private int mMonthHeaderHeight;
+
+    /**
+     * 横向滚动
+     */
+    static final int HORIZONTAL = 0;
+    /**
+     * 竖向滚动
+     */
+    static final int VERTICAL = 1;
+
 
     /**
      * 默认选择模式
@@ -536,6 +555,9 @@ final class CalendarViewDelegate {
                 CalendarUtil.dipToPx(context, 4));
         mYearViewMonthPaddingRight = (int) array.getDimension(R.styleable.CalendarView_year_view_month_padding_right,
                 CalendarUtil.dipToPx(context, 4));
+        mMonthHeaderHeight = (int) array.getDimension(R.styleable.CalendarView_month_header_height,
+                CalendarUtil.dipToPx(context, 0));
+        mCalendarOrientation = array.getInt(R.styleable.CalendarView_calendar_orientation, HORIZONTAL);
 
         if (mMinYear <= MIN_YEAR) mMinYear = MIN_YEAR;
         if (mMaxYear >= MAX_YEAR) mMaxYear = MAX_YEAR;
@@ -820,6 +842,23 @@ final class CalendarViewDelegate {
 
     int getMonthViewShowMode() {
         return mMonthViewShowMode;
+    }
+
+
+    int getCalendarOrientation() {
+        return mCalendarOrientation;
+    }
+
+
+    int getMonthHeaderHeight() {
+        if (mCalendarOrientation == VERTICAL) {
+            return mMonthHeaderHeight;
+        }
+        return 0;
+    }
+
+    void setCalendarOrientation(int calendarOrientation) {
+        this.mCalendarOrientation = calendarOrientation;
     }
 
     void setMonthViewShowMode(int monthViewShowMode) {

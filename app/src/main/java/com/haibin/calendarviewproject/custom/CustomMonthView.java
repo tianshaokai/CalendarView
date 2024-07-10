@@ -54,6 +54,9 @@ public class CustomMonthView extends MonthView {
 
     private float mSchemeBaseLine;
 
+    private Paint mMonthLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private Paint mMonthTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
     public CustomMonthView(Context context) {
         super(context);
 
@@ -78,6 +81,16 @@ public class CustomMonthView extends MonthView {
         mCurrentDayPaint.setStyle(Paint.Style.FILL);
         mCurrentDayPaint.setColor(0xFFeaeaea);
 
+        mMonthLinePaint.setStyle(Paint.Style.STROKE);
+        mMonthLinePaint.setStrokeWidth(dipToPx(context, 2));
+        mMonthLinePaint.setColor(0xFFeaeaea);
+
+        mMonthTextPaint.setStyle(Paint.Style.FILL);
+        mMonthTextPaint.setFakeBoldText(true);
+        mMonthTextPaint.setTextSize(dipToPx(context, 18));
+        mMonthTextPaint.setColor(Color.BLACK);
+
+
         mPointPaint.setAntiAlias(true);
         mPointPaint.setStyle(Paint.Style.FILL);
         mPointPaint.setTextAlign(Paint.Align.CENTER);
@@ -100,6 +113,11 @@ public class CustomMonthView extends MonthView {
         mRadius = Math.min(mItemWidth, mItemHeight) / 11 * 5;
     }
 
+    @Override
+    protected void onDrawHeader(Canvas canvas, int x, int y, int height) {
+        canvas.drawText(mMonth + "月", ((float) ((mItemWidth / 2) + y)) - (mMonthTextPaint.measureText(this.mMonth + "月") / 2.0f), (float) (height - (height / 3)), mMonthTextPaint);
+        canvas.drawLine((float) y, height - dipToPx(getContext(), 2), getWidth() - getCalendarPaddingRight(), height - dipToPx(getContext(), 2), mMonthLinePaint);
+    }
 
     @Override
     protected boolean onDrawSelected(Canvas canvas, Calendar calendar, int x, int y, boolean hasScheme) {
@@ -128,6 +146,8 @@ public class CustomMonthView extends MonthView {
         int cx = x + mItemWidth / 2;
         int cy = y + mItemHeight / 2;
         int top = y - mItemHeight / 6;
+
+        canvas.drawLine(x, (mItemHeight + y) - dipToPx(getContext(), 1), mItemWidth + x, (this.mItemHeight + y) - dipToPx(getContext(), 1), mMonthLinePaint);
 
         if (calendar.isCurrentDay() && !isSelected) {
             canvas.drawCircle(cx, cy, mRadius, mCurrentDayPaint);

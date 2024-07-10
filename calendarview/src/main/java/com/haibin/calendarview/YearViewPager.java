@@ -23,6 +23,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
@@ -93,11 +95,12 @@ public final class YearViewPager extends ViewPager {
 
     @Override
     public void setCurrentItem(int item, boolean smoothScroll) {
-        if (Math.abs(getCurrentItem() - item) > 1) {
-            super.setCurrentItem(item, false);
-        } else {
-            super.setCurrentItem(item, false);
-        }
+//        if (Math.abs(getCurrentItem() - item) > 1) {
+//            super.setCurrentItem(item, false);
+//        } else {
+//            super.setCurrentItem(item, false);
+//        }
+        super.setCurrentItem(item, false);
     }
 
     /**
@@ -200,5 +203,62 @@ public final class YearViewPager extends ViewPager {
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         return mDelegate.isYearViewScrollable() && super.onInterceptTouchEvent(ev);
+    }
+
+    public void animateYearOnMonth(Animation.AnimationListener animationListener, int h, int w) {
+        int month = this.mDelegate.mIndexCalendar.getMonth();
+        int height = getHeight();
+        int width = getWidth();
+
+        if (height != 0) {
+            h = height;
+            w = width;
+        }
+
+        int scalingOffset = 0;
+
+        if (month == 1) {
+            scalingOffset = h / 8;
+            w = 0;
+        } else if (month == 2) {
+            w /= 2;
+            scalingOffset = h / 8;
+        } else if (month == 3) {
+            scalingOffset = h / 8;
+
+        } else if (month == 4) {
+            w = 0;
+            scalingOffset = (h / 8) * 3;
+        } else if (month == 5) {
+            w /= 2;
+            scalingOffset = (h / 8) * 3;
+        } else if (month == 6) {
+            scalingOffset = (h / 8) * 3;
+
+        } else if (month == 7) {
+            w = 0;
+            scalingOffset = (h / 8) * 5;
+        } else if (month == 8) {
+            w /= 2;
+            scalingOffset = (h / 8) * 5;
+        } else if (month == 9) {
+            scalingOffset = (h / 8) * 5;
+
+        } else if (month == 10) {
+            w = 0;
+            scalingOffset = (h / 8) * 7;
+        } else if (month == 11) {
+            w /= 2;
+            scalingOffset = (h / 8) * 7;
+        } else {
+            scalingOffset = (h / 8) * 7;
+        }
+
+        ScaleAnimation scaleAnimation = new ScaleAnimation(4.0f, 1.0f, 4.0f, 1.0f, 0, (float) w, 0, (float) scalingOffset);
+        scaleAnimation.setDuration(320);
+        scaleAnimation.setAnimationListener(animationListener);
+        clearAnimation();
+        startAnimation(scaleAnimation);
+
     }
 }

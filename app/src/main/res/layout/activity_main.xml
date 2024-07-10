@@ -59,6 +59,31 @@
                 tools:ignore="SmallSp" />
         </LinearLayout>
 
+
+        <ImageView
+            android:id="@+id/iv_orientation"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="12dp"
+            android:layout_toLeftOf="@+id/iv_expand"
+            android:background="@drawable/bg_ripple"
+            android:padding="6dp"
+            android:src="@mipmap/ic_horizontal"
+            android:tint="#333333" />
+
+        <ImageView
+            android:id="@+id/iv_expand"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="12dp"
+            android:layout_toLeftOf="@+id/iv_func"
+            android:background="@drawable/bg_ripple"
+            android:padding="6dp"
+            android:src="@mipmap/ic_expand_list"
+            android:tint="#333333" />
+
         <ImageView
             android:id="@+id/iv_func"
             android:layout_width="32dp"
@@ -133,6 +158,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#fff"
+            app:calendar_height="72dp"
             app:calendar_padding_left="22dp"
             app:calendar_padding_right="10dp"
             app:current_day_lunar_text_color="#ff0000"
@@ -147,7 +173,11 @@
             app:min_year_day="1"
             app:min_year_month="1"
             app:month_view="com.haibin.calendarviewproject.custom.CustomMonthView"
+            app:month_view_auto_select_day="last_select_day_ignore_current"
             app:month_view_show_mode="mode_only_current"
+            app:calendar_orientation="vertical"
+            app:month_header_height="60dp"
+
             app:other_month_lunar_text_color="#e1e1e1"
             app:other_month_text_color="#e1e1e1"
             app:scheme_lunar_text_color="#CFCFCF"
@@ -173,7 +203,6 @@
             app:year_view_scheme_color="#f17706"
             app:year_view_week_height="0dp"
             app:year_view_week_text_color="#666666"
-            app:month_view_auto_select_day="last_select_day_ignore_current"
             app:year_view_week_text_size="7sp" />
 
 
